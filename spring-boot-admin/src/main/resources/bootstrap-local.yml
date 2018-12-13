@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: cloud-admin-server
+  cloud:
+    config:
+      discovery:
+        # 开启配置发现
+        enabled: true
+        # 配置中心服务ID
+        service-id: CLOUD-CONFIG-SERVER
+      # 配置 profile
+      profile: local
+  security:
+    user:
+      name: 'admin'
+      password: '123456'
+
+# 注册中心配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@192.168.1.188:9010/eureka/,http://eureka:123456@192.168.1.188:9011/eureka/
+  instance:
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: 192.168.1.188
+    prefer-ip-address: true
+
+server:
+  port: 9040

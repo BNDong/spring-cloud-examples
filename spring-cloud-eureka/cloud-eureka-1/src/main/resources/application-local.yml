@@ -1,0 +1,69 @@
+# eureka ： 主要配置属性在 EurekaInstanceConfigBean和 EurekaClientConfigBean 中
+eureka:
+  client:
+    #是否关闭 eureka client
+    #    enabled: true
+    service-url:
+      # 注册中心地址
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@192.168.1.188:9010/eureka/
+    # 是否注册自身到注册中心
+    register-with-eureka: false
+    # 是否拉取服务注册信息
+    fetch-registry: false
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
+    eureka-service-url-poll-interval-seconds: 30
+    # 定义从注册中心获取注册服务的信息
+    registry-fetch-interval-seconds: 5
+  server:
+    # 是否开启注册中心保护机制
+    enable-self-preservation: false
+    # 服务清理间隔，毫秒
+    eviction-interval-timer-in-ms: 60000
+    # 设置如果Eureka Server启动时无法从临近Eureka Server节点获取注册信息，它多久不对外提供注册服务
+    wait-time-in-ms-when-sync-empty: 6000000
+    # 集群之间相互更新节点信息的时间频率
+    peer-eureka-nodes-update-interval-ms: 10000
+  instance:
+    # 是否使用IP地址广播服务
+    prefer-ip-address: true
+    # 服务租约时间，秒
+    lease-renewal-interval-in-seconds: 10
+    # 间隔多久时间没有发送心跳，认为服务不可用，秒
+    lease-expiration-duration-in-seconds: 20
+    # 定义IP
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: 192.168.1.188
+
+spring:
+  application:
+    # 服务名称
+    name: cloud-eureka-server
+  # 安全机制
+  security:
+    user:
+      name: eureka
+      password: 123456
+  # spring boot admin client
+  boot:
+    admin:
+      client:
+        url: http://192.168.1.188:9040
+        username: admin
+        password: 123456
+        instance:
+          service-base-url: http://${eureka.instance.ip-address}:${server.port}
+          metadata:
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+
+server:
+  port: 9011
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
