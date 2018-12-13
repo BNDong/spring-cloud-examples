@@ -36,7 +36,7 @@
     * spring-boot-starter-mail - [email]
 
 ## spring-docker-compose
-容器构建编排
+容器构建编排，将 *.env 中```REGISTRY_NAMESPACE```修改为```public-container```即可 pull 镜像。
 ```
 ├─ spring-docker-compose
 │  ├─ compose - 容器构建编排配置
