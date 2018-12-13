@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: cloud-config-server
+  cloud:
+    config:
+      server:
+        git:
+          # 服务的git仓库地址
+          uri: git@github.com:BNDong/spring-cloud-examples.git
+          # 配置文件所在目录
+          search-paths: 'spring-git-config/{application}'
+          # git仓库的分支
+          default-label: master
+          # git仓库的用户名
+          username: BNDong
+          # git仓库的密码
+          password: 123456
+  # rabbitmq 设置
+  rabbitmq:
+    host: 192.168.1.254
+    port: 5672
+    username: guest
+    password: guest
+  # spring boot admin client
+  boot:
+    admin:
+      client:
+        url: http://192.168.1.254:9040
+        username: admin
+        password: 123456
+        instance:
+          service-base-url: http://${eureka.instance.ip-address}:${server.port}
+
+# 注册中心设置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@192.168.1.254:9010/eureka/,http://eureka:123456@192.168.1.254:9011/eureka/
+  instance:
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: 192.168.1.254
+    prefer-ip-address: true
+
+
+# 服务设置
+server:
+  port: 9020
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS

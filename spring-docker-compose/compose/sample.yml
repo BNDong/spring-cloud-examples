@@ -1,0 +1,106 @@
+version: "3"
+services:
+  #################### rabbitmq #####################
+  rabbitmq:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${RABBITMQ_NAME}:${RABBITMQ_VERSION}
+    ports:
+      - "${RABBITMQ_AMQP_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    volumes:
+      - ${RABBITMQ_LIB_DATA}:/var/rabbitmq/lib
+    restart: always
+    networks:
+      - default
+
+  #################### spring-cloud-eureka ###########
+  server_eureka:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${SERVER_EUREKA_NAME}:${SERVER_EUREKA_VERSION}
+    ports:
+    - "${SERVER_EUREKA_PORT}:9010"
+    volumes:
+    - ${SERVER_EUREKA_DATA}:/data/:rw
+    - ${SERVER_EUREKA_LOGS}:/data/logs/:rw
+    tty: true
+    restart: always
+    network_mode: "bridge"
+
+  #################### test_lnmp #####################
+  test_lnmp_nginx:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_NGINX_NAME}:${TEST_LNMP_NGINX_VERSION}
+    ports:
+    - "${TEST_LNMP_NGINX_HTTP_HOST_PORT}:80"
+    - "${TEST_LNMP_NGINX_HTTPS_HOST_PORT}:443"
+    volumes:
+    - ${TEST_LNMP_NGINX_SOURCE_DIR}:/var/www/:rw
+    - ${TEST_LNMP_NGINX_CONFD_DIR}:/etc/nginx/conf.d/:rw
+    - ${TEST_LNMP_NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
+    - ${TEST_LNMP_NGINX_LOG_DIR}:/var/log/nginx/:rw
+    restart: always
+    networks:
+    - default
+
+  test_lnmp_php56:
+#    build:
+#      context: ../
+#      args:
+#        PHP_VERSION: ${TEST_LNMP_PHP56_PHP_VERSION}
+#        PHP_XDEBUG: ${TEST_LNMP_PHP56_XDEBUG}
+#        PHP_SWOOLE: ${TEST_LNMP_PHP56_SWOOLE}
+#        PHP_REDIS: ${TEST_LNMP_PHP56_REDIS}
+#        REPLACE_SOURCE_LIST: ${REPLACE_SOURCE_LIST}
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_PHP56_NAME}:${TEST_LNMP_PHP56_VERSION}
+    volumes:
+    - ${TEST_LNMP_PHP56_SOURCE_DIR}:/var/www/:rw
+    - ${TEST_LNMP_PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
+    - ${TEST_LNMP_PHP56_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:rw
+    restart: always
+    cap_add:
+    - SYS_PTRACE
+    networks:
+    - default
+
+  test_lnmp_mysql:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_MYSQL_NAME}:${TEST_LNMP_MYSQL_VERSION}
+    ports:
+    - "${TEST_LNMP_MYSQL_HOST_PORT}:3306"
+    volumes:
+    - ${TEST_LNMP_MYSQL_CONF_FILE}:/etc/mysql/conf.d/mysql.cnf:ro
+    - ${TEST_LNMP_MYSQL_DATA_DIR}:/var/lib/mysql/:rw
+    restart: always
+    networks:
+    - default
+    environment:
+      MYSQL_ROOT_PASSWORD: "${TEST_LNMP_MYSQL_ROOT_PASSWORD}"
+
+  test_lnmp_redis:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_REDIS_NAME}:${TEST_LNMP_REDIS_VERSION}
+    restart: always
+    networks:
+    - default
+    ports:
+    - "${TEST_LNMP_REDIS_HOST_PORT}:6379"
+
+  test_lnmp_phpmyadmin:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_PHPMYADMIN_NAME}:${TEST_LNMP_PHPMYADMIN_VERSION}
+    ports:
+    - "${TEST_LNMP_PHPMYADMIN_HOST_PORT}:80"
+    restart: always
+    networks:
+    - default
+    environment:
+    - PMA_HOST=test_lnmp_mysql
+    - PMA_PORT=3306
+
+  test_lnmp_phpredisadmin:
+    image: ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${TEST_LNMP_REDISMYADMIN_NAME}:${TEST_LNMP_REDISMYADMIN_VERSION}
+    ports:
+    - "${TEST_LNMP_REDISMYADMIN_HOST_PORT}:80"
+    restart: always
+    networks:
+    - default
+    environment:
+    - REDIS_1_HOST=test_lnmp_redis
+    - REDIS_1_PORT=6379
+
+networks:
+  default:
