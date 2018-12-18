@@ -18,7 +18,7 @@
     * spring-cloud-starter-netflix-ribbon - [客户端负载]
     * spring-cloud-netflix-sidecar - [异构语言]
     * spring-boot-admin-starter-client - [SBA Client]
-* [spring-cloud-zuul](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-cloud-zuul) **- 网关：跨域配置，断路器，重试**
+* [spring-cloud-zuul](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-cloud-zuul) **- 网关：跨域配置，断路器，重试，异常处理**
     * spring-cloud-starter-netflix-zuul - [网关服务端]
     * spring-cloud-starter-netflix-eureka-client - [注册中心客户端]
     * spring-cloud-starter-config - [配置中心客户端]
@@ -26,6 +26,7 @@
     * spring-cloud-zuul-ratelimit - [限流]
     * spring-retry - [重试机制]
     * spring-boot-admin-starter-client - [SBA Client]
+    * spring-boot-starter-freemarker - [模板引擎]
 * [spring-boot-admin](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-boot-admin) **- spring boot admin**
     * spring-cloud-starter-netflix-eureka-client - [注册中心客户端]
     * spring-cloud-starter-config - [配置中心客户端]

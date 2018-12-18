@@ -9,7 +9,7 @@ spring:
         # 配置中心服务ID
         service-id: CLOUD-CONFIG-SERVER
       # 配置 profile
-      profile: test
+      profile: dev
   # spring boot admin client
   boot:
     admin:

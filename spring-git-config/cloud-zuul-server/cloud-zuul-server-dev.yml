@@ -14,6 +14,12 @@ spring:
   redis:
     host: 192.168.1.254
     port: 9031
+  # 出现错误时, 直接抛出异常(便于异常统一处理，否则捕获不到404)
+  mvc:
+    throw-exception-if-no-handler-found: true
+  # 不要为工程中的资源文件建立映射
+  resources:
+    add-mappings: false
 
 hystrix:
   command:
