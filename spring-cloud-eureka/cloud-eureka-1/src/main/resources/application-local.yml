@@ -25,7 +25,7 @@ eureka:
     peer-eureka-nodes-update-interval-ms: 10000
   instance:
     # 是否使用IP地址广播服务
-    prefer-ip-address: true
+    prefer-ip-address: false
     # 服务租约时间，秒
     lease-renewal-interval-in-seconds: 10
     # 间隔多久时间没有发送心跳，认为服务不可用，秒
@@ -33,6 +33,8 @@ eureka:
     # 定义IP
     instance-id: ${eureka.instance.ip-address}:${server.port}
     ip-address: 192.168.1.188
+    # 主机名
+    hostname: eureka02
 
 spring:
   application:
