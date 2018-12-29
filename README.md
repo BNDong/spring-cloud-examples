@@ -63,13 +63,36 @@
 ### 审计日志
 ![admin](/gh-static/admin8.png)
 
+## rabbitmq
+### 消息队列
+![rabbitmq](/gh-static/rabbitmq1.png)
+
+### 状态监控
+![rabbitmq](/gh-static/rabbitmq2.png)
+
 ## config
 配置刷新: ```[POST] actuator/bus-refresh``` ("application/json; charset=UTF-8")
 <br>git web hook: ```[POST] /monitor```
-<br>文件格式：```{application}/${spring.application.name}-${spring.cloud.config.profile}.yml```
 
 ## oauth
 oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
+
+### 获取 token
+
+### 验证 token
+
+### 刷新 token
+
+### 撤销 token
+
+### 获取 public key
+
+### 注册用户
+
+## zuul
+API网关，支持鉴权，断路器机制，回退机制，统一异常处理，接口限流
+
+## oauth token
 
 
 # cloud-docker-compose
@@ -88,3 +111,20 @@ oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
 │  └─ sources.list
 ```
 ## 容器构建
+```
+cd compose
+cp docker-compose-dev.env .env
+docker-compose -f docker-compose-dev.yml up -d
+```
+## shell
+* sh/docker_in.sh 进入容器
+* sh/jar_restart.sh 重启 jar 包
+* sh/jar_start.sh 启动 jar 包
+* sh/jar_stop.sh 停止 jar 包
+
+# could-git-config
+配置仓库：```{application}/${spring.application.name}-${spring.cloud.config.profile}.yml```
+
+# dependent project
+[dnmp](https://github.com/yeszao/dnmp)
+[oauth2-server](https://github.com/jobmission/oauth2-server)
