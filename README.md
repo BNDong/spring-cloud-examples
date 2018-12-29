@@ -1,42 +1,41 @@
 # spring-cloud-examples
 🌀 Personal learning use cases. 个人学习用例。
-<br>使用 Docker 容器构建服务，宿主机IP：```192.168.1.254```，本地IP：```192.168.1.188```
-## spring-cloud
+<br>以异构其他语言为目的微服务架构，高自由度，可扩展，可伸缩。
+<br>使用 Docker 容器构建服务。本地架构服务器IP：```192.168.1.254```，本地开发服务器IP：```192.168.1.188```
+## architecture
+
+<p align="center">
+<img src="/gh-static/architecture.png" alt="architecture">
+</p>
+
+## spring version
+
 |spring       |version|
 |:-----------:|:----------:|
-|**boot**     |2.0.0.RELEASE|
+|**boot**     |2.0.6.RELEASE|
 |**cloud**    |Finchley.SR2|
 
-* [spring-cloud-eureka](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-cloud-eureka) **- 注册中心**
-    * spring-cloud-starter-netflix-eureka-server - [注册中心服务端]
-    * spring-boot-starter-security - [安全认证]
-    * spring-boot-admin-starter-client - [SBA Client]
-* [spring-cloud-config](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-cloud-config) **- 配置中心：动态配置**
-    * spring-cloud-config-server - [配置中心服务端]
-    * spring-cloud-starter-bus-amqp - [消息驱动]
-    * spring-cloud-starter-netflix-eureka-client - [注册中心客户端]
-    * spring-cloud-starter-netflix-ribbon - [客户端负载]
-    * spring-cloud-netflix-sidecar - [异构语言]
-    * spring-boot-admin-starter-client - [SBA Client]
-* [spring-cloud-zuul](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-cloud-zuul) **- 网关：跨域配置，断路器，重试，异常处理**
-    * spring-cloud-starter-netflix-zuul - [网关服务端]
-    * spring-cloud-starter-netflix-eureka-client - [注册中心客户端]
-    * spring-cloud-starter-config - [配置中心客户端]
-    * spring-cloud-starter-bus-amqp - [消息驱动]
-    * spring-cloud-zuul-ratelimit - [限流]
-    * spring-retry - [重试机制]
-    * spring-boot-admin-starter-client - [SBA Client]
-    * spring-boot-starter-freemarker - [模板引擎]
-* [spring-boot-admin](https://github.com/BNDong/spring-cloud-examples/tree/master/spring-boot-admin) **- spring boot admin**
-    * spring-cloud-starter-netflix-eureka-client - [注册中心客户端]
-    * spring-cloud-starter-config - [配置中心客户端]
-    * spring-cloud-starter-bus-amqp - [消息驱动]
-    * spring-boot-starter-security - [安全认证]
-    * spring-boot-admin-server - [SBA Server]
-    * spring-boot-admin-server-ui - [SBA Server UI]
-    * spring-boot-starter-mail - [email]
+## service
 
-## spring-docker-compose
+|application  |port        |describe    |
+|:-----------:|:----------:|:-----------|
+|**spring-cloud-eureka**|9010|注册中心：安全认证|
+|**spring-cloud-eureka-1** |9011|注册中心2：安全认证|
+|**spring-cloud-config** |9020|配置中心：配置刷新|
+|**spring-cloud-zuul** |9030|API网关：回退、熔断、重试、限流、鉴权|
+|**spring-boot-admin** |9040|架构监控：服务、网关、日志、配置|
+|**spring-cloud-oauth**|9050|授权中心：注册、签发、鉴权、撤销|
+|**spring-cloud-sidecar**|--|异构客户端|
+
+### eureka
+* username:eureka
+* passwod:123456
+
+![eureka](/gh-static/eureka1.png)
+
+![eureka](/gh-static/eureka2.png)
+
+### spring-docker-compose
 容器构建编排，将 *.env 中```REGISTRY_NAMESPACE```修改为```public-container```即可 pull 镜像。
 ```
 ├─ spring-docker-compose
