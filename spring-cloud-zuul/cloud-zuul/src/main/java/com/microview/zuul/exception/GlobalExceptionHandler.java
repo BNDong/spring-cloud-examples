@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.microview.zuul.constant.code.ResponseCodeConstant;
 import com.microview.zuul.constant.message.ResponseMessageConstant;
-import com.microview.zuul.tools.ResultJsonTools;
+import com.microview.zuul.utils.ResultJsonUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -135,7 +135,7 @@ public class GlobalExceptionHandler {
             response.setCharacterEncoding("UTF8");
             response.setHeader("Content-Type", "application/json");
             try {
-                response.getWriter().write(ResultJsonTools.build(
+                response.getWriter().write(ResultJsonUtils.build(
                         ResponseCodeConstant.SYSTEM_ERROR,
                         ResponseMessageConstant.APP_EXCEPTION,
                         JSONObject.parseObject(JSON.toJSONString(entity))

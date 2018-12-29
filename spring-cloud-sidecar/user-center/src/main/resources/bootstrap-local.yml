@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: app-user-center
+  cloud:
+    config:
+      discovery:
+        # 开启配置发现
+        enabled: true
+        # 配置中心服务ID
+        service-id: CLOUD-CONFIG-SERVER
+      # 配置 profile
+      profile: local
+  # spring boot admin client
+  boot:
+    admin:
+      client:
+        url: http://192.168.1.188:9040
+        username: admin
+        password: 123456
+        instance:
+          service-base-url: http://${eureka.instance.ip-address}:${server.port}
+
+# 注册中心设置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:123456@192.168.1.188:9010/eureka/,http://eureka:123456@192.168.1.188:9011/eureka/
+  instance:
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: 192.168.1.188
+    prefer-ip-address: true
+
+# 服务设置
+server:
+  port: 9060
+
+# 代理设置
+sidecar:
+  port: 2121
+  health-uri: http://${eureka.instance.ip-address}:${sidecar.port}/eurekaHealth.json

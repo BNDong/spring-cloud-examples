@@ -6,9 +6,9 @@ spring:
       server:
         git:
           # 服务的git仓库地址
-          uri: git@github.com:BNDong/spring-cloud-examples.git
+          uri: https://github.com/BNDong/spring-cloud-examples.git
           # 配置文件所在目录
-          search-paths: 'spring-git-config/{application}'
+          search-paths: 'cloud-git-config/{application}'
           # git仓库的分支
           default-label: master
           # git仓库的用户名
@@ -41,10 +41,20 @@ eureka:
     ip-address: 192.168.1.188
     prefer-ip-address: true
 
+# 日志设置
+logging:
+  level:
+    root: info
+  path: D:/Object/spring-logs/config
+  file:
+    max-history: 90
 
-# 服务设置
 server:
   port: 9020
+  tomcat:
+    accesslog:
+      directory: D:/Object/spring-logs/config
+      enabled: true
 
 management:
   endpoints:

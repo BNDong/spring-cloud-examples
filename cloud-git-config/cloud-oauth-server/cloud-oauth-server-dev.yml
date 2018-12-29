@@ -1,0 +1,82 @@
+spring:
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://192.168.1.254:9053/oauth2_server?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  # jpa配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: false
+  # rabbitmq 设置
+  rabbitmq:
+    host: 192.168.1.254
+    port: 5672
+    username: guest
+    password: guest
+  thymeleaf:
+    cache: false
+  # 缓存配置
+  redis:
+    # 数据库索引
+    database: 0
+    host: 192.168.1.254
+    port: 9051
+    password:
+    jedis:
+      pool:
+        # 最大连接数
+        max-active: 8
+        # 最大阻塞等待时间(负数表示没限制)
+        max-wait: -1ms
+        # 最大空闲
+        max-idle: 8
+        # 最小空闲
+        min-idle: 0
+    # 连接超时时间
+    timeout: 1000ms
+
+logging:
+  level:
+    root: info
+  org:
+    springframework:
+      security: info
+  path: /data/logs/spring/oauth2
+  file:
+    max-history: 90
+
+server:
+  servlet:
+    context-path: /
+  tomcat:
+    accesslog:
+      directory: /data/logs/spring/oauth2
+      enabled: true
+
+signin:
+  failure:
+    max: 5
+
+jwt:
+  jks:
+    # 加密密钥
+    keypass: 3IiwiZXhwIjoxNTQ4MzIyMDI5LC
+  token:
+    # access token 过期时间，单位秒
+    accessTokenValiditySeconds: 7200
+    # refresh token 过期时间，单位秒
+    refreshTokenValiditySeconds: 43200
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS

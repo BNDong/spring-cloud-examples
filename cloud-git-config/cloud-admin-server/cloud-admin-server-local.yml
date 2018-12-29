@@ -1,0 +1,50 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  # 邮箱配置
+#  mail:
+#    host: smtp.qq.com
+#    username: dbnuowork@qq.com
+#    password: xxxxxxxxxxxx
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
+#  boot:
+#    admin:
+#      notify:
+#        mail:
+#          # 启用邮件通知
+#          enabled: true
+#          # 以逗号分隔的邮件收件人列表
+#          to: dbnuo@foxmail.com
+#          from: ${spring.mail.username}
+
+# 日志设置
+logging:
+  level:
+    root: info
+  path: D:/Object/spring-logs/admin
+  file:
+    max-history: 90
+
+server:
+  tomcat:
+    accesslog:
+      directory: D:/Object/spring-logs/admin
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS

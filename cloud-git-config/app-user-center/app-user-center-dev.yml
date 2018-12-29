@@ -1,0 +1,30 @@
+spring:
+  # rabbitmq 设置
+  rabbitmq:
+    host: 192.168.1.254
+    port: 5672
+    username: guest
+    password: guest
+
+# 日志设置
+logging:
+  level:
+    root: info
+  path: /data/logs/spring/userCenter
+  file:
+    max-history: 90
+
+server:
+  tomcat:
+    accesslog:
+      directory: /data/logs/spring/userCenter
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS

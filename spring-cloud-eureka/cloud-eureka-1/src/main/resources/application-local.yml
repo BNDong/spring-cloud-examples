@@ -58,8 +58,20 @@ spring:
             user.name: ${spring.security.user.name}
             user.password: ${spring.security.user.password}
 
+# 日志设置
+logging:
+  level:
+    root: info
+  path: D:/Object/spring-logs/eureka1
+  file:
+    max-history: 90
+
 server:
   port: 9011
+  tomcat:
+    accesslog:
+      directory: D:/Object/spring-logs/eureka1
+      enabled: true
 
 management:
   endpoints:

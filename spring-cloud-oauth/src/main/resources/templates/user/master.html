@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>用户管理</title>
+    <link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/bootstrap/css/bootstrap.min.css}"/>
+    <!-- The link to the CSS that the grid needs -->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../../static/assets/DataTables/datatables.min.css"
+          th:href="@{/assets/DataTables/datatables.min.css}"/>-->
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="../../static/assets/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css"
+          th:href="@{/assets/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css}"/>
+    <script src="../../static/assets/jquery-3.3.1.min.js"
+            th:src="@{/assets/jquery-3.3.1.min.js}"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<nav class="navbar navbar-expand-lg navbar-light static-top sb-navbar">
+    <div class="container">
+        <a class="navbar-brand">OAuth2 后台管理</a>
+        <button class="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarResponsive" style="">
+            <ul class="navbar-nav mr-auto">
+                <!-- <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" href="#" id="dropdownThemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Themes</a>
+                     <div class="dropdown-menu" aria-labelledby="dropdownThemes">
+                         <a class="dropdown-item" href="#">
+                             <i class="fa fa-star"></i>
+                             Most Popular</a>
+                         <div class="dropdown-divider"></div>
+                         <a class="dropdown-item" href="#">Full Websites</a>
+                     </div>
+                 </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="/management/client/">应用接入管理</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/management/user/">用户管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">退出</a>
+                </li>
+            </ul>
+            <!--<ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://twitter.com/sbootstrap">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://twitter.com/sbootstrap">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+            </ul>-->
+        </div>
+    </div>
+</nav>
+<div class="container mt-3">
+    <section>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <section class="content">
+                <table id="myTable" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>登录名</th>
+                        <th>角色</th>
+                        <th>昵称</th>
+                        <th>加入时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                </table>
+                <br/>
+            </section>
+            <section class="content">
+                <form class="d-none" id="detailsForm">
+
+                    <input type="hidden" value="" id="id"/>
+
+                    <div class="form-group row">
+                        <label for="nickName" class="col-2 control-label text-right">昵称</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" id="nickName" placeholder="昵称" required="required"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="password" class="col-2 control-label text-right">密码</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" id="password" placeholder="密码"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address" class="col-2 control-label text-right">地址</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control" id="address" placeholder="地址"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-2 control-label"></label>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-info mr-5" id="update">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <!-- /.content -->
+            <!-- /.content -->
+        </div>
+    </section>
+</div>
+<!-- /.content-wrapper -->
+<footer class="main-footer">
+</footer>
+
+<script src="../../static/assets/bootstrap/js/bootstrap.min.js"
+        th:src="@{/assets/bootstrap/js/bootstrap.min.js}"></script>
+<script src="../../static/assets/moment-with-locales.min.js"
+        th:src="@{/assets/moment-with-locales.min.js}"></script>
+<script th:src="@{/assets/localforage.min.js}" src="../static/assets/localforage.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="../../static/assets/DataTables/datatables.min.js"
+        th:src="@{/assets/DataTables/datatables.min.js}"></script>
+<script type="text/javascript" charset="utf8"
+        src="../../static/assets/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js"
+        th:src="@{/assets/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js}"></script>
+
+<th:block th:inline="javascript">
+    <script>
+
+        function formatBoolean(cellValue, options, rowObject) {
+            if (cellValue == null || cellValue == "") {
+                return "";
+            } else if (cellValue == true) {
+                return "是";
+            } else {
+                return "否";
+            }
+        }
+
+        function formatStatus(cellValue, options, rowObject) {
+            if (cellValue === null || cellValue === "") {
+                return "";
+            } else if (Number(cellValue) == -1) {
+                return "是";
+            } else {
+                return "否";
+            }
+        }
+
+        function formatDate(cellValue) {
+            if (cellValue != null && cellValue != "") {
+                var day = moment(cellValue);
+                var formatted = day.format("YYYY-MM-DD HH:mm");
+                return formatted;
+            } else {
+                return "";
+            }
+
+        }
+
+        $(document).ready(function () {
+
+            var table = $('#myTable').DataTable({
+                paging: true,
+                serverSide: true,
+                orderMulti: false,
+                responsive: true,
+                ajax: {
+                    url: '/management/user/list',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    {data: 'id'},
+                    {
+                        data: 'username',
+                        render: $.fn.dataTable.render.text()
+                    },
+                    {data: 'role', bSortable: false},
+                    {
+                        data: 'nickName',
+                        defaultContent: '',
+                        bSortable: false,
+                        render: $.fn.dataTable.render.text()
+                    },
+                    {
+                        data: 'dateCreated',
+                        render: function (data, type, row) {
+                            return formatDate(data);
+                        }
+                    }
+                ],
+                columnDefs: [
+                    {
+                        "targets": [5],
+                        "data": "id",
+                        "render": function (data, type, row, meta) {
+                            var btnString = "";
+                            if (row.recordStatus < 0) {
+                                btnString = "<button class='btn btn-secondary btn-sm btn-status' data-user-id='" + data + "' data-record-status='" + row.recordStatus + "'>启用</button>";
+                            } else {
+                                btnString = "<button class='btn btn-success btn-sm btn-status' data-user-id='" + data + "' data-record-status='" + row.recordStatus + "'>禁用</button>";
+                            }
+                            btnString += "&nbsp;&nbsp;&nbsp;<button class='btn btn-primary btn-sm btn-edit' data-user-id='" + data + "'>编辑</button>";
+                            return btnString;
+                        }
+                    }
+                ]
+            });
+
+
+            $("#myTable").on("click", ".btn-edit", function () {
+                var userId = $(this).data("user-id");
+                $("#detailsForm").removeClass("d-none");
+                var url = "/management/user/details?id=" + userId;
+                $.get(url, function (data) {
+                    $("#id").val(data.id);
+                    $("#nickName").val(data.nickName);
+                    $("#address").val(data.address);
+                    $("#password").val('');
+                    $("#message").removeClass("bg-danger").html("");
+                    $("#message").removeClass("bg-success").html("");
+                });
+            });
+
+
+            $("#detailsForm").on("submit", function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/management/user/details',
+                    data: {
+                        id: $("#id").val(),
+                        nickName: $("#nickName").val(),
+                        address: $("#address").val(),
+                        password: $("#password").val()
+                    },
+                    success: function (data) {
+                        if (data.status == 1) {
+                            table.ajax.reload(null, false); // 刷新表格数据，分页信息不会重置
+                            $("#createNew").trigger("click");
+                            $("#detailsForm").addClass("d-none");
+                            alert("保存成功!");
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                });
+                return false;
+            });
+
+
+            $("#myTable").on("click", ".btn-status", function () {
+                var userId = $(this).data("user-id");
+                var deleteOperation = $(this).data("record-status");
+                $.ajax({
+                    type: 'POST',
+                    url: '/management/user/details',
+                    data: {id: userId, deleteOperation: deleteOperation},
+                    success: function (data) {
+                        table.ajax.reload(null, false); // 刷新表格数据，分页信息不会重置
+                    }
+                });
+
+            });
+
+        });
+    </script>
+</th:block>
+</body>
+</html>
