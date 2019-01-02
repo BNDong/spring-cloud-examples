@@ -1,7 +1,7 @@
 # spring-cloud-examples
 🌀 Personal learning use cases. 个人学习用例。
-<br>以异构其他语言为目的微服务架构，高自由度，可扩展，可伸缩。
-<br>使用 Docker 容器构建服务。本地架构服务器IP：```192.168.1.254```，本地开发服务器IP：```192.168.1.188```
+<br>以异构语言为目的微服务架构，高自由度，可扩展，可伸缩。
+<br>使用 Docker 构建服务。本地架构服务器IP：```192.168.1.254```，本地开发计算机IP：```192.168.1.188```
 # architecture
 
 ![architecture](/gh-static/architecture.png)
@@ -17,27 +17,26 @@
 
 |application  |port        |describe    |
 |:-----------:|:----------:|:-----------|
-|**spring-cloud-eureka**|9010|注册中心：安全认证|
-|**spring-cloud-eureka-1** |9011|注册中心2：安全认证|
+|**spring-cloud-eureka**|9010/9011|注册中心：安全认证|
 |**spring-cloud-config** |9020|配置中心：配置刷新|
 |**spring-cloud-zuul** |9030|API网关：回退、熔断、重试、限流、鉴权|
-|**spring-boot-admin** |9040|架构监控：服务、网关、日志、配置|
+|**spring-boot-admin** |9040|boot管理：监控、日志、配置|
 |**spring-cloud-oauth**|9050|授权中心：注册、签发、鉴权、撤销|
-|**spring-cloud-sidecar**|--|异构客户端|
+|**spring-cloud-sidecar**|--|异构客户端代理|
 
 ## eureka
-* username: eureka
-* passwod: 123456
+* **username:** eureka
+* **passwod:** 123456
 
-### 注册服务
+### 服务注册
 ![eureka](/gh-static/eureka1.png)
 
 ### 注册历史
 ![eureka](/gh-static/eureka2.png)
 
 ## admin
-* username: admin
-* passwod: 123456
+* **username:** admin
+* **passwod:** 123456
 
 ### 服务状态
 ![admin](/gh-static/admin1.png)
@@ -60,40 +59,84 @@
 ### API监控
 ![admin](/gh-static/admin7.png)
 
-### 审计日志
-![admin](/gh-static/admin8.png)
-
 ## rabbitmq
+* **username:** guest
+* **passwod:** guest
 ### 消息队列
 ![rabbitmq](/gh-static/rabbitmq1.png)
 
-### 状态监控
+### 消息监控
 ![rabbitmq](/gh-static/rabbitmq2.png)
 
 ## config
-配置刷新: ```[POST] actuator/bus-refresh``` ("application/json; charset=UTF-8")
-<br>git web hook: ```[POST] /monitor```
+* **配置刷新:** ```[POST] actuator/bus-refresh``` ("application/json; charset=UTF-8")
+* **web hook:** ```[POST] /monitor```
 
 ## oauth
 oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
-
+<br>支持的4种授权模式 grant_type
+```
+authorization_code,implicit,password,client_credentials;
+```
 ### 获取 token
-
+* authorization_code模式：通过用户获取 code，进而获取 token
+```
+1. [GET] /oauth/authorize?client_id=SampleClientId&response_type=code&redirect_uri=http://callback.com/login
+用户同意授权后响应：
+浏览器重定向到：http://callback.com/login?code=1E37Xk，接收code,然后后端调用步骤2获取token
+2. [POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=authorization_code&redirect_uri=http://callback.com/login&code=1E37Xk&extend[id]=2222
+响应：extend 为自定义数据，数据会包含在token中
+{
+    "access_token": "a.b.c",
+    "token_type": "bearer",
+    "refresh_token": "d.e.f",
+    "expires_in": 43199,
+    "scope": "read",
+    "userId": "1",
+    "extend": {
+        "id": "2222"
+    }
+    "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
+}
+```
+* password模式：直接使用用户获取 token
+```
+[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=password&scope=read&username=zhangsan&password=tgb.258&extend[id]=2222
+响应：extend 为自定义数据，数据会包含在token中
+{
+    "access_token": "a.b.c",
+    "token_type": "bearer",
+    "refresh_token": "d.e.f",
+    "expires_in": 43199,
+    "scope": "read",
+    "userId": "1",
+    "extend": {
+        "id": "2222"
+    }
+    "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
+}
+```
 ### 验证 token
-
+```[POST] /oauth/check_token?token=a.b.c```
 ### 刷新 token
-
+```[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=refresh_token&refresh_token=d.e.f```
 ### 撤销 token
-
+```[POST] /oauth/revokeToken?client_id=SampleClientId&client_secret=tgb.258&access_token=a.b.c```
 ### 获取 public key
-
+```[GET] /oauth/token_key```
 ### 注册用户
-
+```[POST] /oauth/signUp?username=lisi&password=yourpass&client_id=SampleClientId&client_secret=tgb.258```
 ## zuul
 API网关，支持鉴权，断路器机制，回退机制，统一异常处理，接口限流
 
-## oauth token
-
+### oauth token
+传递 token 三种方式
+* 请求时添加Authorization header
+```Authorization : Bearer xxxxx```
+* 请求地址添加参数access_token
+```/api/a?access_token=xxxxx```
+* cookie方式 添加access_token
+```access_token=xxxxx```
 
 # cloud-docker-compose
 ## 目录结构
@@ -112,19 +155,24 @@ API网关，支持鉴权，断路器机制，回退机制，统一异常处理�
 ```
 ## 容器构建
 ```
-cd compose
+cd ./cloud-docker-compose/compose
 cp docker-compose-dev.env .env
 docker-compose -f docker-compose-dev.yml up -d
 ```
 ## shell
-* sh/docker_in.sh 进入容器
-* sh/jar_restart.sh 重启 jar 包
-* sh/jar_start.sh 启动 jar 包
-* sh/jar_stop.sh 停止 jar 包
+```
+cd ./cloud-docker-compose/sh
+chmod 0755 *.sh
+./xxxx.sh
+```
+* ```sh/docker_in.sh``` - 进入容器
+* ```sh/jar_restart.sh``` - 重启 jar 包
+* ```sh/jar_start.sh``` - 启动 jar 包
+* ```sh/jar_stop.sh``` - 停止 jar 包
 
 # could-git-config
 配置仓库：```{application}/${spring.application.name}-${spring.cloud.config.profile}.yml```
 
 # dependent project
-[dnmp](https://github.com/yeszao/dnmp)
-[oauth2-server](https://github.com/jobmission/oauth2-server)
+* [dnmp](https://github.com/yeszao/dnmp)
+* [oauth2-server](https://github.com/jobmission/oauth2-server)
