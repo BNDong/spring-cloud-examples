@@ -166,7 +166,7 @@ cd ./cloud-docker-compose/compose
 cp docker-compose-dev.env .env
 docker-compose -f docker-compose-dev.yml up -d
 ```
-*********************
+
 ```
 [root@localhost ~]#  docker ps --format "table {{.Command}}\t{{.Ports}}\t{{.Names}}"
 COMMAND                  PORTS                                                                                        NAMES
@@ -181,7 +181,7 @@ COMMAND                  PORTS                                                  
 "docker-entrypoint.s…"   0.0.0.0:9031->6379/tcp                                                                       cloud_zuul_redis
 "/bin/bash"              0.0.0.0:9040->9040/tcp                                                                       cloud_admin
 "docker-entrypoint.s…"   33060/tcp, 0.0.0.0:9053->3306/tcp                                                            cloud_oauth_mysql
-"/bin/bash"              0.0.0.0:9050->9050/tcp                                                                       cloud_oauth                                                                    cloud_oauth
+"/bin/bash"              0.0.0.0:9050->9050/tcp                                                                       cloud_oauth
 ```
 ## shell
 ```
