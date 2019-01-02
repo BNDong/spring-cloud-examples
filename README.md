@@ -24,7 +24,7 @@
 |**spring-cloud-oauth**|9050|授权中心：注册、签发、鉴权、撤销|
 |**spring-cloud-sidecar**|--|异构客户端代理|
 
-## eureka
+## cloud-eureka
 * **username:** eureka
 * **passwod:** 123456
 
@@ -34,7 +34,7 @@
 ### 注册历史
 ![eureka](/gh-static/eureka2.png)
 
-## admin
+## cloud-admin
 * **username:** admin
 * **passwod:** 123456
 
@@ -59,7 +59,7 @@
 ### API监控
 ![admin](/gh-static/admin7.png)
 
-## rabbitmq
+## cloud-rabbitmq
 * **username:** guest
 * **passwod:** guest
 ### 消息队列
@@ -68,15 +68,15 @@
 ### 消息监控
 ![rabbitmq](/gh-static/rabbitmq2.png)
 
-## config
-* **配置刷新:** ```[POST] actuator/bus-refresh``` ("application/json; charset=UTF-8")
+## cloud-config
+* **配置刷新:** ```[POST] /actuator/bus-refresh``` ("application/json; charset=UTF-8")
 * **web hook:** ```[POST] /monitor```
 
-## oauth
+## cloud-oauth
 oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
 <br>支持的4种授权模式 grant_type
 ```
-authorization_code,implicit,password,client_credentials;
+authorization_code, implicit, password, client_credentials
 ```
 ### 获取 token
 * authorization_code模式：通过用户获取 code，进而获取 token
@@ -126,16 +126,23 @@ authorization_code,implicit,password,client_credentials;
 ```[GET] /oauth/token_key```
 ### 注册用户
 ```[POST] /oauth/signUp?username=lisi&password=yourpass&client_id=SampleClientId&client_secret=tgb.258```
-## zuul
+### 管理后台
+```[GET] /management/user/```
+
+![oauth](/gh-static/oauth1.png)
+## cloud-zuul
 API网关，支持鉴权，断路器机制，回退机制，统一异常处理，接口限流
 
 ### oauth token
 传递 token 三种方式
 * 请求时添加Authorization header
+
 ```Authorization : Bearer xxxxx```
 * 请求地址添加参数access_token
+
 ```/api/a?access_token=xxxxx```
 * cookie方式 添加access_token
+
 ```access_token=xxxxx```
 
 # cloud-docker-compose
@@ -158,6 +165,23 @@ API网关，支持鉴权，断路器机制，回退机制，统一异常处理�
 cd ./cloud-docker-compose/compose
 cp docker-compose-dev.env .env
 docker-compose -f docker-compose-dev.yml up -d
+```
+*********************
+```
+[root@localhost ~]#  docker ps --format "table {{.Command}}\t{{.Ports}}\t{{.Names}}"
+COMMAND                  PORTS                                                                                        NAMES
+"docker-entrypoint.s…"   0.0.0.0:9051->6379/tcp                                                                       cloud_oauth_redis
+"/bin/bash"              0.0.0.0:9011->9011/tcp                                                                       cloud_eureka_1
+"/bin/bash"              0.0.0.0:9030->9030/tcp                                                                       cloud_zuul
+"/bin/bash"              0.0.0.0:9010->9010/tcp                                                                       cloud_eureka
+"/bin/bash"              0.0.0.0:9020->9020/tcp                                                                       cloud_config
+"php -S 0.0.0.0:80"      0.0.0.0:9032->80/tcp                                                                         cloud_zuul_phpredisadmin
+"docker-entrypoint.s…"   4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, 15671/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp   rabbitmq
+"php -S 0.0.0.0:80"      0.0.0.0:9052->80/tcp                                                                         cloud_oauth_phpredisadmin
+"docker-entrypoint.s…"   0.0.0.0:9031->6379/tcp                                                                       cloud_zuul_redis
+"/bin/bash"              0.0.0.0:9040->9040/tcp                                                                       cloud_admin
+"docker-entrypoint.s…"   33060/tcp, 0.0.0.0:9053->3306/tcp                                                            cloud_oauth_mysql
+"/bin/bash"              0.0.0.0:9050->9050/tcp                                                                       cloud_oauth                                                                    cloud_oauth
 ```
 ## shell
 ```
