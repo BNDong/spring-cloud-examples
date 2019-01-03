@@ -13,4 +13,5 @@ public class ResponseMessageConstant {
     public static final String OAUTH_TOKEN_MISSING        = "token 缺失";
     public static final String OAUTH_TOKEN_FAILURE        = "token 失效";
     public static final String OAUTH_TOKEN_CHECK_ERROR    = "token 验证失败";
+    public static final String SIGN_CHECK_ERROR           = "签名验证失败";
 }

@@ -2,7 +2,7 @@ package com.microview.zuul.fallback;
 
 import com.microview.zuul.constant.code.ResponseCodeConstant;
 import com.microview.zuul.constant.message.ResponseMessageConstant;
-import com.microview.zuul.utils.ResultJsonUtils;
+import com.microview.zuul.utils.ResultJsonUtil;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class ServiceFallbackProvider implements FallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                return new ByteArrayInputStream(ResultJsonUtils.build(
+                return new ByteArrayInputStream(ResultJsonUtil.build(
                         ResponseCodeConstant.SYSTEM_ERROR,
                         ResponseMessageConstant.SYSTEM_ERROR
                     ).getBytes("UTF-8"));

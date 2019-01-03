@@ -23,10 +23,12 @@ import java.util.Map;
 
 @Configuration
 @EnableResourceServer
-@ConfigurationProperties(prefix = "oauth")
+@ConfigurationProperties(prefix = "zuul.oauth")
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    private Boolean enabled;
 
     private String tokenKeyUri;
 
@@ -87,8 +89,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
-        for(String rules : whiteList) {
-            http.authorizeRequests().antMatchers(rules + "/**").permitAll();
+        if (enabled) {
+            for(String rules : whiteList) {
+                http.authorizeRequests().antMatchers(rules + "/**").permitAll();
+            }
+        } else {
+            http.authorizeRequests().antMatchers("/**").permitAll();
         }
 
         http
@@ -112,5 +118,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     public void setWhiteList(List<String> whiteList) {
         this.whiteList = whiteList;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

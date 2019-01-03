@@ -80,6 +80,7 @@ zuul:
       - origin
       - url
   # 路由规则
+  add-proxy-headers: true
   routes:
     config:
       path: /config/**
@@ -87,17 +88,31 @@ zuul:
     appUserCenter:
       path: /appUserCenter/**
       serviceId: APP-USER-CENTER
-  add-proxy-headers: true
-
-oauth:
-  # 公钥获取地址
-  tokenKeyUri: http://192.168.1.188:9050/oauth/token_key
-  # 验证 token 地址
-  checkTokenUri: http://192.168.1.188:9050/oauth/check_token
-  # 不验证 token uri，只需配置前置部分即可，例如配置 “/a”，以下全部生效：“/a/b”，“/a/b/c/...”，“/a/b?c=d&...”
-  whiteList:
-  - "/actuator" # 系统API，监控相关，勿动
-  - "/test"
+  # 接口认证
+  oauth:
+    # 是否开启接口 token 认证
+    enabled: true
+    # 公钥获取地址
+    tokenKeyUri: http://192.168.1.188:9050/oauth/token_key
+    # 验证 token 地址
+    checkTokenUri: http://192.168.1.188:9050/oauth/check_token
+    # 不验证 token uri，只需配置前置部分即可，例如配置 “/a”，以下全部生效：“/a/b”，“/a/b/c/...”，“/a/b?c=d&...”
+    whiteList:
+    - "/actuator" # 系统API，监控相关，勿动
+    - "/test"
+    - "/config"
+  # 接口签名，兼容阿里云API网关签名认证（在 ALIYUN-PHP-SDK 测试通过）
+  sign:
+    # 是否开启接口 sign 认证
+    enabled: true
+    # appkey - appsecret
+    appks:
+      k1: s1 # 可以对应阿里云 appkey 和 appsecret
+      k2: s2
+      k3: s3
+    # 不验证 sign uri，只需配置前置部分即可，例如配置 “/a”，以下全部生效：“/a/b”，“/a/b/c/...”，“/a/b?c=d&...”
+    whiteList:
+    - "/actuator" # 系统API，监控相关，勿动
 
 # 日志设置
 logging:

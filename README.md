@@ -133,7 +133,7 @@ authorization_code, implicit, password, client_credentials
 ## cloud-zuul
 API网关，支持鉴权，断路器机制，回退机制，统一异常处理，接口限流
 
-### oauth token
+### auth token
 传递 token 三种方式
 * 请求时添加Authorization header
 
@@ -144,6 +144,14 @@ API网关，支持鉴权，断路器机制，回退机制，统一异常处理�
 * cookie方式 添加access_token
 
 ```access_token=xxxxx```
+
+### auth sign
+加签可以使用阿里云API网关的加签方式，做了初步的解析验证！
+* [demo-sign-java](https://github.com/aliyun/api-gateway-demo-sign-java)
+* [demo-sign-php](https://github.com/aliyun/api-gateway-demo-sign-php)
+* [demo-sign-python](https://github.com/aliyun/api-gateway-demo-sign-python)
+* [demo-sign-net](https://github.com/aliyun/api-gateway-demo-sign-net)
+* [demo-sign-android](https://github.com/aliyun/api-gateway-demo-sign-android)
 
 # cloud-docker-compose
 ## 目录结构

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.microview.zuul.config.CustomTokenExtractor;
 import com.microview.zuul.constant.code.ResponseCodeConstant;
 import com.microview.zuul.constant.message.ResponseMessageConstant;
-import com.microview.zuul.utils.ResultJsonUtils;
+import com.microview.zuul.utils.ResultJsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,12 +17,14 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
-@ConfigurationProperties(prefix = "oauth")
+@ConfigurationProperties(prefix = "zuul.oauth")
 public class AuthTokenFilter implements Filter {
+
+    private Boolean enabled;
 
     private String checkTokenUri;
 
@@ -40,12 +42,12 @@ public class AuthTokenFilter implements Filter {
         this.request  = (HttpServletRequest) servletRequest;
         this.response = (HttpServletResponse) servletResponse;
 
-        if (shouldFilter()) {
+        if (enabled && shouldFilter()) {
 
             String token = customTokenExtractor.extractToken(request);
             if (StringUtils.isEmpty(token)) {
                 response.setHeader("Content-Type", "application/json;charset=UTF-8");
-                response.getWriter().write(ResultJsonUtils.build(
+                response.getWriter().write(ResultJsonUtil.build(
                         ResponseCodeConstant.REQUEST_FAILED,
                         ResponseMessageConstant.OAUTH_TOKEN_MISSING
                 ));
@@ -61,7 +63,7 @@ public class AuthTokenFilter implements Filter {
                     JSONObject jsonObject = JSONArray.parseObject(forEntity.getBody());
                     if (jsonObject.containsKey("error") && jsonObject.containsKey("error_description")) {
                         response.setHeader("Content-Type", "application/json;charset=UTF-8");
-                        response.getWriter().write(ResultJsonUtils.build(
+                        response.getWriter().write(ResultJsonUtil.build(
                                 ResponseCodeConstant.REQUEST_FAILED,
                                 jsonObject.get("error_description").toString()
                         ));
@@ -69,7 +71,7 @@ public class AuthTokenFilter implements Filter {
                     }
                 } else {
                     response.setHeader("Content-Type", "application/json;charset=UTF-8");
-                    response.getWriter().write(ResultJsonUtils.build(
+                    response.getWriter().write(ResultJsonUtil.build(
                             ResponseCodeConstant.REQUEST_FAILED,
                             ResponseMessageConstant.OAUTH_TOKEN_CHECK_ERROR
                     ));
@@ -105,5 +107,9 @@ public class AuthTokenFilter implements Filter {
 
     public void setWhiteList(List<String> whiteList) {
         this.whiteList = whiteList;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
