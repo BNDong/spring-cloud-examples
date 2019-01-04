@@ -1,6 +1,6 @@
 # spring-cloud-examples
 🌀 Personal learning use cases. 个人学习用例。
-<br>以异构语言为目的微服务架构，高自由度，可扩展，可伸缩。
+<br>以异构语言为目的的微服务架构，高自由度，可扩展，可伸缩。
 <br>使用 Docker 构建服务。本地架构服务器IP：```192.168.1.254```，本地开发计算机IP：```192.168.1.188```
 # architecture
 

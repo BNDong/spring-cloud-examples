@@ -18,7 +18,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 // session creation to be allowed (it's disabled by default in 2.0.6)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
-                .requestMatchers().antMatchers("/photos/**", "/user/me", "/oauth/logout")
+                .requestMatchers().antMatchers("/photos/**", "/user/me", "/oauth/revokeToken/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/me").access("#oauth2.hasScope('read')")
