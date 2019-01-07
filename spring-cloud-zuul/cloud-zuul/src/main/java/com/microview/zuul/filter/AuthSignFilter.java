@@ -43,8 +43,15 @@ public class AuthSignFilter implements Filter {
 
             Map<String,String> headersMap = upperFirstCharHeaders();
 
+//            log.info("=====================================================");
+//            log.info(headersMap.toString());
+//            log.info("************************************");
+
             // 请求携带签名
             String requestSign = headersMap.get(SystemHeader.X_CA_SIGNATURE);
+
+//            log.info("请求携带签名："+requestSign);
+//            log.info("************************************");
 
             // 剔除不参与签名的数据
             headersMap.remove(SystemHeader.X_CA_SIGNATURE);
@@ -68,6 +75,10 @@ public class AuthSignFilter implements Filter {
                 appsecret = sysAppsecret != null ? sysAppsecret : "null";
             }
 
+//            log.info("appkey："+appkey);
+//            log.info("appsecret："+appsecret);
+//            log.info("************************************");
+
             // 数据签名
             String sign = SignUtil.sign(
                     appsecret,
@@ -78,6 +89,9 @@ public class AuthSignFilter implements Filter {
                     bodys,
                     signHeaderPrefixList
             );
+
+//            log.info("网关生成签名："+sign);
+//            log.info("************************************");
 
             if (!sign.equals(requestSign)) {
                 response.setHeader("Content-Type", "application/json;charset=UTF-8");

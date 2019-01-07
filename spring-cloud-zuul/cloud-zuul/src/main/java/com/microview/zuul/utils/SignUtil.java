@@ -31,7 +31,8 @@ import com.microview.zuul.constant.HttpHeader;
 import com.microview.zuul.constant.SystemHeader;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -108,6 +109,11 @@ public class SignUtil {
         sb.append(Constants.LF);
         sb.append(buildHeaders(headers, signHeaderPrefixList));
         sb.append(buildResource(path, querys, bodys));
+
+//        Logger log = LoggerFactory.getLogger((new SignUtil()).getClass());
+//        log.info(sb.toString());
+//        log.info("************************************");
+
         return sb.toString();
     }
 
