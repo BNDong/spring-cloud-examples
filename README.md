@@ -6,6 +6,10 @@
 
 ![architecture](/gh-static/architecture.png)
 
+# startup dependency
+
+![startup](/gh-static/startup.png)
+
 # spring version
 
 |spring       |version|
@@ -74,10 +78,6 @@
 
 ## cloud-oauth
 oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
-<br>支持的4种授权模式 grant_type
-```
-authorization_code, implicit, password, client_credentials
-```
 ### 获取 token
 * authorization_code模式：通过用户获取 code，进而获取 token
 ```
@@ -205,6 +205,6 @@ chmod 0755 *.sh
 # could-git-config
 配置仓库：```{application}/${spring.application.name}-${spring.cloud.config.profile}.yml```
 
-# dependent project
+# project dependent
 * [dnmp](https://github.com/yeszao/dnmp)
 * [oauth2-server](https://github.com/jobmission/oauth2-server)

@@ -37,4 +37,5 @@ server:
 # 代理设置
 sidecar:
   port: 7000
+  ip-address: ${eureka.instance.ip-address}
   health-uri: http://${eureka.instance.ip-address}:${sidecar.port}/eurekaHealth.json
