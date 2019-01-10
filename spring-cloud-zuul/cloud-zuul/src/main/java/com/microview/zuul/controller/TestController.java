@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -37,7 +38,13 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public String test() {
+    public String test(HttpServletRequest request) {
+        Enumeration<?> enum1 = request.getHeaderNames();
+        while (enum1.hasMoreElements()) {
+            String key = (String) enum1.nextElement();
+            String value = request.getHeader(key);
+            System.out.println(key + "\t" + value);
+        }
         return "okok";
     }
 }

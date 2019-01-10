@@ -6,6 +6,7 @@ import com.microview.zuul.config.CustomTokenExtractor;
 import com.microview.zuul.constant.code.ResponseCodeConstant;
 import com.microview.zuul.constant.message.ResponseMessageConstant;
 import com.microview.zuul.utils.ResultJsonUtil;
+import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -68,6 +69,9 @@ public class AuthTokenFilter implements Filter {
                                 jsonObject.get("error_description").toString()
                         ));
                         return;
+                    } else {
+//                        RequestContext requestContext = RequestContext.getCurrentContext();
+//                        requestContext.addZuulRequestHeader("X-Access-Token", token);
                     }
                 } else {
                     response.setHeader("Content-Type", "application/json;charset=UTF-8");

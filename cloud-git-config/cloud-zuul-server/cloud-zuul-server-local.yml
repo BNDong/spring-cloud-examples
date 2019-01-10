@@ -79,7 +79,8 @@ zuul:
       - user
       - origin
       - url
-  # 路由规则
+  # 路由设置
+  sensitiveHeaders:
   add-proxy-headers: true
   routes:
     config:

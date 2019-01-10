@@ -20,6 +20,7 @@ spring:
         instance:
           service-base-url: http://${eureka.instance.ip-address}:${server.port}
 
+
 # 注册中心配置
 eureka:
   client:

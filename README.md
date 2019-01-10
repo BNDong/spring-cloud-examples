@@ -6,7 +6,7 @@
 
 ![architecture](/gh-static/architecture.png)
 
-# startup dependency
+## startup dependency
 
 ![startup](/gh-static/startup.png)
 

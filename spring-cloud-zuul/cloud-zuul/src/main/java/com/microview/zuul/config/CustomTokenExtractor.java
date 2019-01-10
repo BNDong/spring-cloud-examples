@@ -14,6 +14,7 @@ import java.util.Enumeration;
 
 @Component
 public class CustomTokenExtractor implements TokenExtractor {
+
     private static final Log logger = LogFactory.getLog(CustomTokenExtractor.class);
 
     @Override
@@ -42,7 +43,6 @@ public class CustomTokenExtractor implements TokenExtractor {
                 }
             }
         }
-
         return token;
     }
 
@@ -64,7 +64,9 @@ public class CustomTokenExtractor implements TokenExtractor {
         if (commaIndex > 0) {
             authHeaderValue = authHeaderValue.substring(0, commaIndex);
         }
-
+        if (authHeaderValue.equals("")) {
+            return null;
+        }
         return authHeaderValue;
     }
 
