@@ -110,6 +110,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources.tokenExtractor(new CustomTokenExtractor());
+        resources.authenticationEntryPoint(new AuthExceptionEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler());
     }
 
     public void setTokenKeyUri(String tokenKeyUri) {
