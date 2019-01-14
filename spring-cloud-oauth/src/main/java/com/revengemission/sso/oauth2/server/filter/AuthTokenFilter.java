@@ -32,7 +32,6 @@ public class AuthTokenFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
         this.request  = (HttpServletRequest) servletRequest;
         this.response = (HttpServletResponse) servletResponse;
 

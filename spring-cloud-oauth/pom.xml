@@ -4,10 +4,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.revengemission.sso</groupId>
-	<artifactId>oauth2-server</artifactId>
+	<artifactId>cloud-oauth</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>oauth2-server</name>
+	<name>cloud-oauth</name>
 	<description>oauth2-server with resource server</description>
 
 	<parent>

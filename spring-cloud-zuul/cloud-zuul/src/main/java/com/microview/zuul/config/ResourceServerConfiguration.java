@@ -2,6 +2,7 @@ package com.microview.zuul.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     private String tokenKeyUri;
 
     private List<String> whiteList;
+
+    @Autowired
+    CustomTokenExtractor customTokenExtractor;
+
+    @Autowired
+    AuthExceptionEntryPoint authExceptionEntryPoint;
+
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public TokenStore tokenStore() {
@@ -109,9 +119,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.tokenExtractor(new CustomTokenExtractor());
-        resources.authenticationEntryPoint(new AuthExceptionEntryPoint())
-                .accessDeniedHandler(new CustomAccessDeniedHandler());
+        resources.tokenExtractor(customTokenExtractor);
+        resources.authenticationEntryPoint(authExceptionEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler);
     }
 
     public void setTokenKeyUri(String tokenKeyUri) {
