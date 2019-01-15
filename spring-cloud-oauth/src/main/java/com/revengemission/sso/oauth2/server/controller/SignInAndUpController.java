@@ -149,7 +149,7 @@ public class SignInAndUpController {
         }
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        if (clientDetails == null || passwordEncoder.matches(clientSecret, clientDetails.getClientSecret())) {
+        if (clientDetails == null || passwordEncoder.matches(password, clientDetails.getClientSecret())) {
             responseResult.setStatus(GlobalConstant.ERROR_DENIED);
             responseResult.setMessage(GlobalConstant.ERROR_MESSAGE_DENIED);
             return responseResult;

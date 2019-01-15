@@ -36,7 +36,7 @@ public class RevokeTokenEndpoint {
             method = {RequestMethod.POST}
     )
     @ResponseBody
-    public ResponseResult tokenLogout(@RequestParam(value = "client_id") String clientId,
+    public ResponseResult revokeToken(@RequestParam(value = "client_id") String clientId,
                               @RequestParam(value = "client_secret") String clientSecret,
                               @RequestParam(value = "access_token") String accessToken) {
         ResponseResult responseResult = new ResponseResult();
@@ -56,6 +56,34 @@ public class RevokeTokenEndpoint {
         String tokenJson = JwtHelper.decode(accessToken).getClaims();
         Map<String, String> jsonMap = JSONObject.parseObject(tokenJson, new TypeReference<Map<String, String>>() {});
         customAuthTokenExtendHandler.setUserAuthTokenWhitelist(jsonMap.get(GlobalConstant.TOKEN_USER_ID_STR), "revokeToken");
+        return responseResult;
+    }
+
+    @RequestMapping(
+            value = {"/oauth/revokeTokenAll"},
+            method = {RequestMethod.POST}
+    )
+    @ResponseBody
+    public ResponseResult revokeTokenAll(@RequestParam(value = "client_id") String clientId,
+                                      @RequestParam(value = "client_secret") String clientSecret,
+                                      @RequestParam(value = "access_token") String accessToken) {
+        ResponseResult responseResult = new ResponseResult();
+
+        if (StringUtils.isAnyBlank(clientId, clientSecret, accessToken)) {
+            responseResult.setStatus(GlobalConstant.ERROR);
+            responseResult.setMessage(GlobalConstant.ERROR_MESSAGE_ILLEGAL_PARAMETER);
+            return responseResult;
+        }
+
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        if (clientDetails == null || !passwordEncoder.matches(clientSecret, clientDetails.getClientSecret())) {
+            responseResult.setStatus(GlobalConstant.ERROR_DENIED);
+            responseResult.setMessage(GlobalConstant.ERROR_MESSAGE_DENIED);
+            return responseResult;
+        }
+        String tokenJson = JwtHelper.decode(accessToken).getClaims();
+        Map<String, String> jsonMap = JSONObject.parseObject(tokenJson, new TypeReference<Map<String, String>>() {});
+        customAuthTokenExtendHandler.cancelUserAuthorization(jsonMap.get(GlobalConstant.TOKEN_USER_ID_STR));
         return responseResult;
     }
 }

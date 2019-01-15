@@ -77,15 +77,16 @@
 * **web hook:** ```[POST] /monitor```
 
 ## cloud-oauth
-oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
+oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制，支持单用户多终端授权。
 ### 获取 token
 * authorization_code模式：通过用户获取 code，进而获取 token
 ```
 1. [GET] /oauth/authorize?client_id=SampleClientId&response_type=code&redirect_uri=http://callback.com/login
 用户同意授权后响应：
 浏览器重定向到：http://callback.com/login?code=1E37Xk，接收code,然后后端调用步骤2获取token
-2. [POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=authorization_code&redirect_uri=http://callback.com/login&code=1E37Xk&extend[id]=2222
+2. [POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=authorization_code&redirect_uri=http://callback.com/login&code=1E37Xk&extend[id]=2222&user_client_type=pc
 响应：extend 为自定义数据，数据会包含在token中
+     user_client_type 为用户终端类型，默认为 default
 {
     "access_token": "a.b.c",
     "token_type": "bearer",
@@ -95,14 +96,16 @@ oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
     "userId": "1",
     "extend": {
         "id": "2222"
-    }
+    },
+    "user_client_type": "pc",
     "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
 }
 ```
 * password模式：直接使用用户获取 token
 ```
-[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=password&scope=read&username=zhangsan&password=tgb.258&extend[id]=2222
+[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=password&scope=read&username=zhangsan&password=tgb.258&extend[id]=2222&user_client_type=pc
 响应：extend 为自定义数据，数据会包含在token中
+     user_client_type 为用户终端类型，默认为 default
 {
     "access_token": "a.b.c",
     "token_type": "bearer",
@@ -112,7 +115,8 @@ oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
     "userId": "1",
     "extend": {
         "id": "2222"
-    }
+    },
+    "user_client_type": "pc",
     "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
 }
 ```
@@ -122,6 +126,7 @@ oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制。
 ```[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=refresh_token&refresh_token=d.e.f```
 ### 撤销 token
 ```[POST] /oauth/revokeToken?client_id=SampleClientId&client_secret=tgb.258&access_token=a.b.c```
+```[POST] /oauth/revokeTokenAll?client_id=SampleClientId&client_secret=tgb.258&access_token=a.b.c```
 ### 获取 public key
 ```[GET] /oauth/token_key```
 ### 注册用户

@@ -2,9 +2,12 @@ package com.revengemission.sso.oauth2.server.domain;
 
 public class GlobalConstant {
 
-    public final static String VERIFICATION_CODE    = "verificationCode"; // 验证码key
-    public static final String TOKEN_USER_ID_STR    = "oauth_user_id";
-    public static final String TOKEN_EXTEND_STR     = "extend";
+    public final static String VERIFICATION_CODE      = "verificationCode"; // 验证码key
+    public static final String TOKEN_USER_ID_STR      = "oauth_user_id";
+    public static final String TOKEN_USER_CLIENT_TYPE = "user_client_type";
+    public static final String TOKEN_EXTEND_STR       = "extend";
+    public static final String TOKEN_JTI              = "jti";
+    public static final String TOKEN_ATI              = "ati";
 
     /*****************************************************************************/
 

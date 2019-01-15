@@ -76,4 +76,19 @@ public class JSONUtil {
         JavaType javaType = mapper.getTypeFactory().constructParametricType(collectionClass,elementClasses);
         return mapper.readValue(str,javaType);
     }
+
+    /**
+     *  Jackson library
+     * @param jsonInString
+     * @return
+     */
+    public static boolean isJSONValid(String jsonInString ) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            mapper.readTree(jsonInString);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 }

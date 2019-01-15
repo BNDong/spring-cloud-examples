@@ -61,8 +61,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             @Override
             public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 
-                /** 自定义一些token属性 ***/
-                final Map<String, Object> additionalInformation = new HashMap<>();
+                /** 自定义一些token属性 **/
+                Map<String, Object> additionalInformation = new HashMap<>();
+
                 //Important !,client_credentials mode ,no user!
                 if (authentication.getUserAuthentication() != null) {
                     UserInfo user = (UserInfo) authentication.getUserAuthentication().getPrincipal();// 与登录时候放进去的UserDetail实现类一致
@@ -72,6 +73,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 // 添加请求中自定义数据
                 Map<String, String> extendMap = customAuthTokenExtendHandler.getRequestExtendData();
                 if (extendMap.size() > 0) { additionalInformation.put(GlobalConstant.TOKEN_EXTEND_STR, extendMap); }
+
+                // 添加用户客户端类型
+                additionalInformation.put(GlobalConstant.TOKEN_USER_CLIENT_TYPE, customAuthTokenExtendHandler.getUserClientType());
 
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInformation);
                 OAuth2AccessToken result = super.enhance(accessToken, authentication);
