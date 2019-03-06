@@ -10,12 +10,15 @@
 
 ![startup](/gh-static/startup.png)
 
-# spring version
+> ※启动服务组件的时候，请注意服务之间的依赖！
 
-|spring       |version|
+# version
+
+|type         |version|
 |:-----------:|:----------:|
-|**boot**     |2.0.6.RELEASE|
-|**cloud**    |Finchley.SR2|
+|**spring boot**  |2.0.6.RELEASE|
+|**spring cloud** |Finchley.SR2|
+|**jdk** |1.8|
 
 # project
 
@@ -28,19 +31,103 @@
 |**spring-cloud-oauth**|9050|授权中心：注册、签发、鉴权、撤销|
 |**spring-cloud-sidecar**|--|异构客户端代理|
 
-## cloud-eureka
-* **username:** eureka
-* **passwod:** 123456
+# startup project
+
+服务启动的顺序，参考服务依赖。
+
+## 启动容器
+
+容器的启动参考：[cloud-docker-compose](https://github.com/BNDong/spring-cloud-examples/tree/master/cloud-docker-compose) 的说明文档
+
+## 上传jar包
+
+> 项目打包命令：
+> <br>```mvn clean``` ：删除 target 目录
+> <br>```mvn package``` ：重新打包
+
+打包后的 jar 包，上传至 ```MicroviewDocker/volumes/[容器名称]/``` 目录下。
+
+## 进入容器操作 jar 包
+
+> 关于进入容器和 jar 包的相关操作，封装了操作脚本：
+> <br>宿主机中脚本目录： ```MicroviewDocker/sh/```
+> <br>容器中脚本目录：```/usr/local/sh/```
+
+* **进入容器**
+<br>运行脚本：```./docker_in.sh```
+<br>出现以下界面：
+```
+The container currently running:
+--------------------------------------------------
+1 statistics_service_redis_even
+2 statistics_service_redis_odd
+3 statistics_service_phpredisadmin_odd
+4 statistics_service_phpredisadmin_even
+5 statistics_service_phpredisadmin
+6 openzipkin
+7 openzipkin_dependencies
+8 openzipkin_mysql
+9 behavior_mycat
+10 log_service_nginx
+...
+--------------------------------------------------
+Please enter the container line number: [输入需要进入容器的编号]
+```
+输入需要进入容器的编号，回车进入容器。
+
+* **启动 jar**
+<br>运行脚本：```./jar_start.sh```
+<br>出现以下界面：
+```
+Enter the jar storage directory(default: /data):[jar 包存储目录] 
+--------------------------------------------------
+1 ****.jar
+--------------------------------------------------
+Enter the line number to run the jar package(default: 1): [启动的 jar 包编号]
+Enter the log storage directory(default: /dev/null): [启动信息输出目录，默认不输出（调试使用）。项目中有关于此信息的默认日志文件]
+Input configuration environment(default: dev): [启动环境，加载不同的配置文件]
+```
+
+* **关闭 jar**
+<br>运行脚本：```./jar_stop.sh```
+<br>出现以下界面：
+```
+The jar package that is running:
+--------------------------------------------------
+   47 ?        Sl   249:10 java -jar /data/cloud-eureka-1-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+ 7609 ?        S+     0:00 grep java -jar .*jar [※忽略此运行进程]
+--------------------------------------------------
+Input PID of the process: [输入需要结束的进程 PID]
+```
+
+* **重启 jar**
+<br>运行脚本：```./jar_restart.sh```
+<br>出现以下界面：
+```
+Enter the jar storage directory(default: /data): [jar 包存储目录] 
+--------------------------------------------------
+1 ***.jar
+--------------------------------------------------
+Enter the line number to run the jar package(default: 1): [启动的 jar 包编号]
+Enter the log storage directory(default: /dev/null):[启动信息输出目录，默认不输出（调试使用）。项目中有关于此信息的默认日志文件]
+Input configuration environment(default: dev): [重新启动环境，加载不同的配置文件]
+```
+
+# project log
+
+项目日志位置：
+* 宿主机日志目录：```MicroviewDocker/logs/spring/```
+* 容器日志目录：```/data/logs/spring/[服务名称]/```
+
+![logs](/gh-static/logs.png)
+
+# partial page
 
 ### 服务注册
 ![eureka](/gh-static/eureka1.png)
 
 ### 注册历史
 ![eureka](/gh-static/eureka2.png)
-
-## cloud-admin
-* **username:** admin
-* **passwod:** 123456
 
 ### 服务状态
 ![admin](/gh-static/admin1.png)
@@ -63,152 +150,11 @@
 ### API监控
 ![admin](/gh-static/admin7.png)
 
-## cloud-rabbitmq
-* **username:** guest
-* **passwod:** guest
 ### 消息队列
 ![rabbitmq](/gh-static/rabbitmq1.png)
 
 ### 消息监控
 ![rabbitmq](/gh-static/rabbitmq2.png)
-
-## cloud-config
-* **配置刷新:** ```[POST] /actuator/bus-refresh``` ("application/json; charset=UTF-8")
-* **web hook:** ```[POST] /monitor```
-
-## cloud-oauth
-oauth2.0 + jwt，支持 token 自定义数据，支持 token 撤销机制，支持单用户多终端授权。
-### 获取 token
-* authorization_code模式：通过用户获取 code，进而获取 token
-```
-1. [GET] /oauth/authorize?client_id=SampleClientId&response_type=code&redirect_uri=http://callback.com/login
-用户同意授权后响应：
-浏览器重定向到：http://callback.com/login?code=1E37Xk，接收code,然后后端调用步骤2获取token
-2. [POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=authorization_code&redirect_uri=http://callback.com/login&code=1E37Xk&extend[id]=2222&user_client_type=pc
-响应：extend 为自定义数据，数据会包含在token中
-     user_client_type 为用户终端类型，默认为 default
-{
-    "access_token": "a.b.c",
-    "token_type": "bearer",
-    "refresh_token": "d.e.f",
-    "expires_in": 43199,
-    "scope": "read",
-    "userId": "1",
-    "extend": {
-        "id": "2222"
-    },
-    "user_client_type": "pc",
-    "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
-}
-```
-* password模式：直接使用用户获取 token
-```
-[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=password&scope=read&username=zhangsan&password=tgb.258&extend[id]=2222&user_client_type=pc
-响应：extend 为自定义数据，数据会包含在token中
-     user_client_type 为用户终端类型，默认为 default
-{
-    "access_token": "a.b.c",
-    "token_type": "bearer",
-    "refresh_token": "d.e.f",
-    "expires_in": 43199,
-    "scope": "read",
-    "userId": "1",
-    "extend": {
-        "id": "2222"
-    },
-    "user_client_type": "pc",
-    "jti": "823cdd71-4732-4f9d-b949-a37ceb4488a4"
-}
-```
-### 验证 token
-```[POST] /oauth/check_token?token=a.b.c```
-### 刷新 token
-```[POST] /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=refresh_token&refresh_token=d.e.f```
-### 撤销 token
-```[POST] /oauth/revokeToken?client_id=SampleClientId&client_secret=tgb.258&access_token=a.b.c```
-```[POST] /oauth/revokeTokenAll?client_id=SampleClientId&client_secret=tgb.258&access_token=a.b.c```
-### 获取 public key
-```[GET] /oauth/token_key```
-### 注册用户
-```[POST] /oauth/signUp?username=lisi&password=yourpass&client_id=SampleClientId&client_secret=tgb.258```
-### 管理后台
-```[GET] /management/user/```
-
-![oauth](/gh-static/oauth1.png)
-## cloud-zuul
-API网关，支持鉴权，断路器机制，回退机制，统一异常处理，接口限流
-
-### auth token
-传递 token 三种方式
-* 请求时添加Authorization header
-
-```Authorization : Bearer xxxxx```
-* 请求地址添加参数access_token
-
-```/api/a?access_token=xxxxx```
-* cookie方式 添加access_token
-
-```access_token=xxxxx```
-
-### auth sign
-加签可以使用阿里云API网关的加签方式，做了初步的解析验证！
-* [demo-sign-java](https://github.com/aliyun/api-gateway-demo-sign-java)
-* [demo-sign-php](https://github.com/aliyun/api-gateway-demo-sign-php)
-* [demo-sign-python](https://github.com/aliyun/api-gateway-demo-sign-python)
-* [demo-sign-net](https://github.com/aliyun/api-gateway-demo-sign-net)
-* [demo-sign-android](https://github.com/aliyun/api-gateway-demo-sign-android)
-
-# cloud-docker-compose
-## 目录结构
-```
-├─ spring-docker-compose
-│  ├─ compose - 容器构建编排配置
-│  ├─ conf - 容器配置
-│  ├─ extensions - 依赖
-│  ├─ logs - 日志
-│  ├─ sh - 脚本
-│  ├─ volumes - 数据卷
-│  ├─ .dockerignore
-│  ├─ .gitignore
-│  ├─ Dockerfile
-│  └─ sources.list
-```
-## 容器构建
-```
-cd ./cloud-docker-compose/compose
-cp docker-compose-dev.env .env
-docker-compose -f docker-compose-dev.yml up -d
-```
-
-```
-[root@localhost ~]#  docker ps --format "table {{.Command}}\t{{.Ports}}\t{{.Names}}"
-COMMAND                  PORTS                                                                                        NAMES
-"docker-entrypoint.s…"   0.0.0.0:9051->6379/tcp                                                                       cloud_oauth_redis
-"/bin/bash"              0.0.0.0:9011->9011/tcp                                                                       cloud_eureka_1
-"/bin/bash"              0.0.0.0:9030->9030/tcp                                                                       cloud_zuul
-"/bin/bash"              0.0.0.0:9010->9010/tcp                                                                       cloud_eureka
-"/bin/bash"              0.0.0.0:9020->9020/tcp                                                                       cloud_config
-"php -S 0.0.0.0:80"      0.0.0.0:9032->80/tcp                                                                         cloud_zuul_phpredisadmin
-"docker-entrypoint.s…"   4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, 15671/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp   rabbitmq
-"php -S 0.0.0.0:80"      0.0.0.0:9052->80/tcp                                                                         cloud_oauth_phpredisadmin
-"docker-entrypoint.s…"   0.0.0.0:9031->6379/tcp                                                                       cloud_zuul_redis
-"/bin/bash"              0.0.0.0:9040->9040/tcp                                                                       cloud_admin
-"docker-entrypoint.s…"   33060/tcp, 0.0.0.0:9053->3306/tcp                                                            cloud_oauth_mysql
-"/bin/bash"              0.0.0.0:9050->9050/tcp                                                                       cloud_oauth
-```
-## shell
-```
-cd ./cloud-docker-compose/sh
-chmod 0755 *.sh
-./xxxx.sh
-```
-* ```sh/docker_in.sh``` - 进入容器
-* ```sh/jar_restart.sh``` - 重启 jar 包
-* ```sh/jar_start.sh``` - 启动 jar 包
-* ```sh/jar_stop.sh``` - 停止 jar 包
-
-# could-git-config
-配置仓库：```{application}/${spring.application.name}-${spring.cloud.config.profile}.yml```
 
 # project dependent
 * [dnmp](https://github.com/yeszao/dnmp)
