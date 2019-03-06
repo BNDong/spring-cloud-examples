@@ -45,12 +45,12 @@
 > <br>```mvn clean``` ：删除 target 目录
 > <br>```mvn package``` ：重新打包
 
-打包后的 jar 包，上传至 ```MicroviewDocker/volumes/[容器名称]/``` 目录下。
+打包后的 jar 包，上传至 ```cloud-docker-compose/volumes/[容器名称]/``` 目录下。
 
 ## 进入容器操作 jar 包
 
 > 关于进入容器和 jar 包的相关操作，封装了操作脚本：
-> <br>宿主机中脚本目录： ```MicroviewDocker/sh/```
+> <br>宿主机中脚本目录： ```cloud-docker-compose/sh/```
 > <br>容器中脚本目录：```/usr/local/sh/```
 
 * **进入容器**
@@ -116,7 +116,7 @@ Input configuration environment(default: dev): [重新启动环境，加载不�
 # project log
 
 项目日志位置：
-* 宿主机日志目录：```MicroviewDocker/logs/spring/```
+* 宿主机日志目录：```cloud-docker-compose/logs/spring/```
 * 容器日志目录：```/data/logs/spring/[服务名称]/```
 
 ![logs](/gh-static/logs.png)
